@@ -27,9 +27,12 @@ public class AG
 		{
 			System.out.println("\nGeração: " + geracao);
 			this.avaliacao();
+			if(this.criterioDeParada(2.0f))
+				break;
+			
 			for(individuo = 0; individuo < TAM_POP/2; individuo++)
 			{
-				System.out.print("\nPares de Indivíduos: " + individuo);
+				//System.out.print("\nPares de Indivíduos: " + individuo);
 				this.cruzamento_simples();
 			}
 			System.out.print("\nMutação.");
@@ -40,6 +43,19 @@ public class AG
 			this.substituicao();
 			pop_aux_posicao = 0;
 		}
+	}
+	
+	public boolean criterioDeParada(float carga)
+	{
+		int i = 0;
+		for(i = 0; i < TAM_POP; i++)
+		{
+			if(avaliacao[i][0] == carga)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void avaliacao()
@@ -102,7 +118,7 @@ public class AG
 		float soma_porcentagem = 0.0f;
 		Random r = new Random();
 		num_sorteado = r.nextInt(101);
-		System.out.println("Roleta: Pai1");
+		//System.out.println("Roleta: Pai1");
 		for(i = 0; i < TAM_POP; i++)
 		{
 			soma_porcentagem += avaliacao[i][1];
@@ -112,10 +128,11 @@ public class AG
 				break;
 			}
 		}
-
-		System.out.println("Roleta: Pai2");
+		soma_porcentagem = 0.0f;
+		
+		//System.out.println("Roleta: Pai2");
 		do{
-			System.out.print(".");
+			//System.out.print(".");
 			num_sorteado = r.nextInt(101);
 			for(i = 0; i < TAM_POP; i++)
 			{
@@ -127,7 +144,8 @@ public class AG
 				}
 			}
 		}while(pais[0] == pais[1]);
-		System.out.println("");		
+		
+		//System.out.println("");		
 		return pais;
 	}
 	
