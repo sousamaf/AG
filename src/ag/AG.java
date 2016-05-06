@@ -149,10 +149,12 @@ public class AG
 				}
 			}
 			contPai2++;
-		}while(pais[0] == pais[1] || contPai2 < 10);
+			//System.out.println(contPai2);
+		}while(pais[0] == pais[1] && contPai2 < 10);
 		
 		if(pais[0] == pais[1])
 		{
+			System.out.println("Roleta: selecao simples.");
 			pais[1] = this.selecao()[1];
 		}
 		
