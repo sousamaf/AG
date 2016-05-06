@@ -28,12 +28,16 @@ public class AG
 			System.out.println("\nGeração: " + geracao);
 			this.avaliacao();
 			if(this.criterioDeParada(2.0f))
+			{
+				System.out.println("\nCritério de parada fitness máximo.");
 				break;
+			}
 			
 			for(individuo = 0; individuo < TAM_POP/2; individuo++)
 			{
 				//System.out.print("\nPares de Indivíduos: " + individuo);
-				this.cruzamento_simples();
+				//this.cruzamento_simples();
+				this.cruzamento_uniforme();
 			}
 			System.out.print("\nMutação.");
 			this.mutacao();
@@ -118,6 +122,7 @@ public class AG
 		float soma_porcentagem = 0.0f;
 		Random r = new Random();
 		num_sorteado = r.nextInt(101);
+		int contPai2 = 0;
 		//System.out.println("Roleta: Pai1");
 		for(i = 0; i < TAM_POP; i++)
 		{
@@ -143,7 +148,13 @@ public class AG
 					break;
 				}
 			}
-		}while(pais[0] == pais[1]);
+			contPai2++;
+		}while(pais[0] == pais[1] || contPai2 < 10);
+		
+		if(pais[0] == pais[1])
+		{
+			pais[1] = this.selecao()[1];
+		}
 		
 		//System.out.println("");		
 		return pais;
@@ -165,14 +176,17 @@ public class AG
 	
 	public int[] selecao()
 	{
-		
-		//Random r = new Random();
 		int[] pais = new int[2];
 		
 		pais = this.roleta();
-		/*
+		return pais;
+	}
+	
+	public int[] selecao_simples()
+	{
 		int iPai1, iPai2;
-		
+		Random r = new Random();
+		int[] pais = new int[2];
 		iPai1 = r.nextInt(TAM_POP);
 		iPai2 = r.nextInt(TAM_POP);
 		
@@ -182,10 +196,8 @@ public class AG
 		}
 		pais[0] = iPai1;
 		pais[1] = iPai2;
-		*/
 		return pais;
 	}
-	
 	public void cruzamento_simples()
 	{
 		// @TODO Tratar número de genes ímpares.
@@ -207,6 +219,29 @@ public class AG
 			}
 		}
 		pop_aux_posicao += 2;
+	}
+	
+	public void cruzamento_uniforme()
+	{
+		int i;
+		int[] pais = new int[2];
+		Random r = new Random();
+		pais = this.selecao();
+
+		for(i = 0; i < QTD_GENE; i++)
+		{
+			if(r.nextInt(2) == 0)
+			{
+				iPOP_AUX[pop_aux_posicao][i] = iPOPULACAO[pais[0]][i];
+				iPOP_AUX[pop_aux_posicao+1][i] = iPOPULACAO[pais[1]][i];
+			} else
+			{
+				iPOP_AUX[pop_aux_posicao][i] = iPOPULACAO[pais[1]][i];
+				iPOP_AUX[pop_aux_posicao+1][i] = iPOPULACAO[pais[0]][i];
+			}
+		}
+		pop_aux_posicao += 2;
+
 	}
 	
 	public void mutacao()
