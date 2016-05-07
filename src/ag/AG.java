@@ -17,10 +17,16 @@ public class AG
 	// Vetor de avaliacao
 	float[][] avaliacao = new float[TAM_POP][2]; 
 	
+	// Parâmetros de formação da populacao
+	int porcentagemCruzamentoSimples = 20;
+	int porcentagemCruzamentoUniforme = 80;
+	int porcentagemMutacao = 2;
+	
 	public void buscar()
 	{
 		int T = 50;
 		int geracao, individuo;
+		float porcentagemFormacao = 0.0f; // Utilizada para controle da formação populacional.
 		
 		this.pop_inicial();
 		for(geracao = 0; geracao < T; geracao++)
@@ -36,11 +42,28 @@ public class AG
 			for(individuo = 0; individuo < TAM_POP/2; individuo++)
 			{
 				//System.out.print("\nPares de Indivíduos: " + individuo);
-				//this.cruzamento_simples();
-				this.cruzamento_uniforme();
+				if(porcentagemFormacao < porcentagemCruzamentoSimples)
+				{
+					//System.out.println("Cruzamento simples.");
+					this.cruzamento_simples();
+				}
+				else
+				{
+					//System.out.println("Cruzamento uniforme.");
+					this.cruzamento_uniforme();
+				}
+				
+				porcentagemFormacao += ((individuo + 1) * 2 * 100)/TAM_POP;
 			}
-			System.out.print("\nMutação.");
-			this.mutacao();
+			
+			porcentagemFormacao = (TAM_POP * porcentagemMutacao)/100;
+			individuo = 0;
+			while(individuo < porcentagemFormacao)
+			{
+				System.out.print("\nMutação.");
+				this.mutacao();
+				individuo++;
+			}
 			
 			System.out.print("\nSubstituição.");
 			System.out.println("");
@@ -155,7 +178,7 @@ public class AG
 		if(pais[0] == pais[1])
 		{
 			System.out.println("Roleta: selecao simples.");
-			pais[1] = this.selecao()[1];
+			pais[1] = this.selecao_simples()[1];
 		}
 		
 		//System.out.println("");		
@@ -200,6 +223,7 @@ public class AG
 		pais[1] = iPai2;
 		return pais;
 	}
+	
 	public void cruzamento_simples()
 	{
 		// @TODO Tratar número de genes ímpares.
@@ -243,9 +267,13 @@ public class AG
 			}
 		}
 		pop_aux_posicao += 2;
-
 	}
 	
+	public void elitismo(int porcentagem)
+	{
+		// TODO elitismo: ordernar o vetor avaliação pelo fitness.
+		
+	}
 	public void mutacao()
 	{
 		Random r = new Random();
